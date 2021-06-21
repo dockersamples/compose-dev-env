@@ -1,7 +1,9 @@
 version: "3.7"
 services:
   backend:
-    build: backend
+    build:
+      context: backend
+      target: development
     secrets:
       - db-password
     depends_on:
@@ -26,7 +28,7 @@ services:
   proxy:
     build: proxy
     ports:
-      - 80:80
+      - 8080:80
     depends_on:
       - backend
 volumes:

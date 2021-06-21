@@ -1,8 +1,11 @@
-FROM golang:1.13-alpine AS build
+FROM golang:1.16-alpine AS build
 WORKDIR /go/src/github.com/org/repo
 COPY . .
 
 RUN go build -o server .
+
+FROM build AS development
+CMD ["go", "run", "main.go"]
 
 FROM alpine:3.12
 EXPOSE 8000
