@@ -5,6 +5,8 @@ COPY . .
 RUN go build -o server .
 
 FROM build AS development
+RUN apk update \
+    && apk add git
 CMD ["go", "run", "main.go"]
 
 FROM alpine:3.12
