@@ -6,7 +6,7 @@ RUN go build -o server .
 
 FROM build AS development
 RUN apt-get update \
-    && apt install git
+    && apt-get install -y git
 CMD ["go", "run", "main.go"]
 
 FROM alpine:3.12
