@@ -1,12 +1,12 @@
-FROM golang:1.16-alpine AS build
+FROM golang:1.16 AS build
 WORKDIR /go/src/github.com/org/repo
 COPY . .
 
 RUN go build -o server .
 
 FROM build AS development
-RUN apk update \
-    && apk add git
+RUN apt-get update \
+    && apt install git
 CMD ["go", "run", "main.go"]
 
 FROM alpine:3.12
