@@ -2,6 +2,7 @@ FROM golang:1.16 AS build
 WORKDIR /go/src/github.com/org/repo
 COPY . .
 
+ENV CGO_ENABLED=0
 RUN go build -o server .
 
 FROM build AS development
