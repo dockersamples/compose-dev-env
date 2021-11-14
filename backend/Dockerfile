@@ -2,7 +2,8 @@ FROM golang:1.16 AS build
 WORKDIR /go/src/github.com/org/repo
 COPY . .
 
-RUN go build -o server .
+# CGO has to be disabled for alpine image
+RUN export CGO_ENABLED=0 && go build -o server .
 
 FROM build AS development
 RUN apt-get update \
