@@ -1,38 +1,76 @@
-version: "3.7"
 services:
   backend:
     build:
-      context: backend
+      context: C:\Users\Marlon\AppData\Local\Temp\volume-compose-dev-env-strange_engelbart\backend
+      dockerfile: C:\Users\Marlon\AppData\Local\Temp\volume-compose-dev-env-strange_engelbart\backend\Dockerfile
       target: development
-    secrets:
-      - db-password
     depends_on:
-      - db
+      db:
+        condition: service_started
+    labels:
+      com.docker.devenvironments.compose: "true"
+      com.docker.devenvironments.compose.build: "true"
+      com.docker.devenvironments.name: compose-dev-env-strange_engelbart
+    networks:
+      default: null
+    secrets:
+    - source: db-password
   db:
-    image: mariadb
-    restart: always
+    environment:
+      MYSQL_DATABASE: example
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db-password
+    expose:
+    - "3306"
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent" ]
+      test:
+      - CMD
+      - mysqladmin
+      - ping
+      - -h
+      - 127.0.0.1
+      - --silent
       interval: 3s
       retries: 5
       start_period: 30s
+    image: mariadb
+    labels:
+      com.docker.devenvironments.compose: "true"
+      com.docker.devenvironments.name: compose-dev-env-strange_engelbart
+    networks:
+      default: null
+    restart: always
     secrets:
-      - db-password
+    - source: db-password
     volumes:
-      - db-data:/var/lib/mysql
-    environment:
-      - MYSQL_DATABASE=example
-      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db-password
-    expose:
-      - 3306
+    - type: volume
+      source: db-data
+      target: /var/lib/mysql
+      volume: {}
   proxy:
-    build: proxy
-    ports:
-      - 8080:80
+    build:
+      context: C:\Users\Marlon\AppData\Local\Temp\volume-compose-dev-env-strange_engelbart\proxy
+      dockerfile: C:\Users\Marlon\AppData\Local\Temp\volume-compose-dev-env-strange_engelbart\proxy\Dockerfile
     depends_on:
-      - backend
+      backend:
+        condition: service_started
+    labels:
+      com.docker.devenvironments.compose: "true"
+      com.docker.devenvironments.compose.build: "true"
+      com.docker.devenvironments.name: compose-dev-env-strange_engelbart
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 80
+      published: 8080
+      protocol: tcp
+networks:
+  default:
+    name: compose-dev-env-strange_engelbart_default
 volumes:
   db-data:
+    name: compose-dev-env-strange_engelbart_db-data
 secrets:
   db-password:
-    file: db/password.txt
+    name: compose-dev-env-strange_engelbart_db-password
+    file: C:\Users\Marlon\AppData\Local\Temp\volume-compose-dev-env-strange_engelbart\db\password.txt
