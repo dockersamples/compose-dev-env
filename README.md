@@ -79,3 +79,8 @@ Stop and remove the containers
 $ docker-compose down
 ```
 
+
+
+### Infrastructure model
+
+![Infrastructure model](.infragenie/infrastructure_model.png)
