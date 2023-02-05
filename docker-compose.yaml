@@ -1,22 +1,26 @@
 services:
   backend:
     build: backend
-    secrets:
-      - db-password
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
     depends_on:
       - db
   db:
+    build: db
     image: mariadb
     restart: always
-    secrets:
-      - db-password
     volumes:
       - db-data:/var/lib/mysql
     environment:
-      - MYSQL_DATABASE=example
-      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db-password
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
     expose:
       - 3306
+    ports:
+      - 3306:3306
   proxy:
     build: proxy
     ports:
@@ -25,6 +29,3 @@ services:
       - backend
 volumes:
   db-data:
-secrets:
-  db-password:
-    file: db/password.txt
